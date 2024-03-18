@@ -6,6 +6,7 @@ use App\Enums\ArticleStatus;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Filament\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -28,12 +29,12 @@ class ArticleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
+                    ->hidden(fn (): bool => !auth()->user()->is_admin)
                     ->label('Author')
                     ->relationship('author', 'name')
                     ->searchable()
                     ->preload()
-                    ->required()
-                    ->hidden(fn (): bool => ! auth()->user()->is_admin),
+                    ->required(),
 
 
                 Forms\Components\TextInput::make('title')
@@ -44,9 +45,13 @@ class ArticleResource extends Resource
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
 
                 Forms\Components\TextInput::make('slug')
+                    ->string()
+                    ->maxLength(255)
                     ->required(),
 
                 Forms\Components\RichEditor::make('content')
+                    ->string()
+                    ->maxLength(255)
                     ->required(),
 
                 Forms\Components\DateTimePicker::make('publication_date')
@@ -58,13 +63,10 @@ class ArticleResource extends Resource
                     ->dehydrated(fn ($state) => filled($state)),
 
                 Forms\Components\Select::make('publication_status')
-                    ->options([
-                        '0' => 'Draft',
-                        '1' => 'Published',
-                    ])
+                    ->options(ArticleStatus::class)
                     ->required()
                     ->enum(ArticleStatus::class)
-                    ->hidden(fn (): bool => ! auth()->user()->is_admin),
+                    ->hidden(fn (): bool => !auth()->user()->is_admin),
             ])
             ->columns(1);
     }
@@ -73,16 +75,22 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('author.name')->label('Author')
+
+                Tables\Columns\TextColumn::make('author.name')
+                    ->label('Author')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('slug'),
+
                 Tables\Columns\TextColumn::make('publication_date')
                     ->formatStateUsing(
                         fn (Carbon $state): string =>
                         $state->toFormattedDateString() . ' (' . $state->diffForHumans() . ')'
                     ),
+
                 Tables\Columns\TextColumn::make('publication_status')
                     ->badge()
                     ->formatStateUsing(fn (ArticleStatus $state): string => $state->string())

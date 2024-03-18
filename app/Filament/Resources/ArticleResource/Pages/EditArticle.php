@@ -19,6 +19,16 @@ class EditArticle extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        if (!auth()->user()->is_admin) {
+            unset($data['user_id']);
+            unset($data['publication_status']);
+        }
+
+        return $data;
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->previousUrl ?? $this->getResource()::getUrl('index');
