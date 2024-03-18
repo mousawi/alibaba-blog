@@ -45,7 +45,15 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article): bool
     {
-        return $user->is_admin || $article->user_id === auth()->user()->id;
+        return $user->is_admin;
+    }
+
+    /**
+     * Determine whether the user can delete models.
+     */
+    public function deleteAny(User $user, Article $article): bool
+    {
+        return $user->is_admin;
     }
 
     /**
@@ -53,7 +61,15 @@ class ArticlePolicy
      */
     public function restore(User $user, Article $article): bool
     {
-        return $user->is_admin || $article->user_id === auth()->user()->id;
+        return $user->is_admin;
+    }
+
+    /**
+     * Determine whether the user can restore models.
+     */
+    public function restoreAny(User $user): bool
+    {
+        return $user->is_admin;
     }
 
     /**
@@ -61,6 +77,14 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article): bool
     {
-        return $user->is_admin || $article->user_id === auth()->user()->id;
+        return $user->is_admin;
+    }
+
+    /**
+     * Determine whether the user can permanently delete models.
+     */
+    public function forceDeleteAny(User $user): bool
+    {
+        return $user->is_admin;
     }
 }

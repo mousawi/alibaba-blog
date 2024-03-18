@@ -48,6 +48,14 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can delete models.
+     */
+    public function deleteAny(User $user): bool
+    {
+        return $user->is_admin;
+    }
+
+    /**
      * Determine whether the user can restore the model.
      */
     public function restore(User $user, User $model): bool
@@ -56,9 +64,25 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can restore models.
+     */
+    public function restoreAny(User $user): bool
+    {
+        return $user->is_admin;
+    }
+
+    /**
      * Determine whether the user can permanently delete the model.
      */
     public function forceDelete(User $user, User $model): bool
+    {
+        return $user->is_admin;
+    }
+
+    /**
+     * Determine whether the user can permanently delete models.
+     */
+    public function forceDeleteAny(User $user): bool
     {
         return $user->is_admin;
     }
