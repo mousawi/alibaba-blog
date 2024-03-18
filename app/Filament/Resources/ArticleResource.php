@@ -64,6 +64,7 @@ class ArticleResource extends Resource
                     ])
                     ->required()
                     ->enum(ArticleStatus::class)
+                    ->hidden(fn (): bool => ! auth()->user()->is_admin),
             ])
             ->columns(1);
     }

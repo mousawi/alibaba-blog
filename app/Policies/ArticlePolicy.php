@@ -51,7 +51,7 @@ class ArticlePolicy
     /**
      * Determine whether the user can delete models.
      */
-    public function deleteAny(User $user, Article $article): bool
+    public function deleteAny(User $user): bool
     {
         return $user->is_admin;
     }
