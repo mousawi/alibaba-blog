@@ -37,7 +37,7 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article): bool
     {
-        return $user->is_admin || $article->user_id === auth()->user()->id;
+        return $user->isAdmin() || $article->user_id === auth()->user()->id;
     }
 
     /**
@@ -45,7 +45,7 @@ class ArticlePolicy
      */
     public function updateAny(User $user): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
@@ -53,7 +53,7 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
@@ -61,7 +61,7 @@ class ArticlePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
@@ -69,7 +69,7 @@ class ArticlePolicy
      */
     public function restore(User $user, Article $article): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
@@ -77,7 +77,7 @@ class ArticlePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
@@ -85,7 +85,7 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
@@ -93,6 +93,6 @@ class ArticlePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 }

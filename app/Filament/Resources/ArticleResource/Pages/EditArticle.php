@@ -21,7 +21,7 @@ class EditArticle extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        if (!auth()->user()->is_admin) {
+        if (!auth()->user()->isAdmin()) {
             unset($data['user_id']);
             unset($data['publication_status']);
         }

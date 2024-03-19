@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\ArticleStatus;
 use App\Filament\Resources\ArticleResource\Pages;
 use App\Models\Article;
+use App\Models\User;
 use App\Services\ArticleService;
 use Carbon\Carbon;
 use Filament\Forms;
@@ -30,7 +31,7 @@ class ArticleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->hidden(fn (): bool => !auth()->user()->is_admin)
+                    ->hidden(fn (): bool => !auth()->user()->isAdmin())
                     ->label('Author')
                     ->relationship('author', 'name')
                     ->searchable()
@@ -67,7 +68,7 @@ class ArticleResource extends Resource
                     ->options(ArticleStatus::class)
                     ->required()
                     ->enum(ArticleStatus::class)
-                    ->hidden(fn (): bool => !auth()->user()->is_admin),
+                    ->hidden(fn (): bool => !auth()->user()->isAdmin()),
             ])
             ->columns(1);
     }
@@ -76,6 +77,10 @@ class ArticleResource extends Resource
     {
         return $table
             ->columns([
+
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID'),
+
 
                 Tables\Columns\TextColumn::make('author.name')
                     ->label('Author')
@@ -96,7 +101,7 @@ class ArticleResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make()
-                    ->visible(auth()->user()->is_admin),
+                    ->visible(auth()->user()->isAdmin()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -105,14 +110,14 @@ class ArticleResource extends Resource
                     ->requiresConfirmation()
                     ->icon('heroicon-o-rocket-launch')
                     ->color('success')
-                    ->visible(fn (Article $article) => ($article->isDraft() && auth()->user()->is_admin))
+                    ->visible(fn (Article $article) => ($article->isDraft() && auth()->user()->isAdmin()))
                     ->action(fn (Article $article, ArticleService $articleService) => $articleService->publishArticle($article)),
 
                 Tables\Actions\Action::make('Draft Article')
                     ->requiresConfirmation()
                     ->icon('heroicon-o-rocket-launch')
                     ->color('warning')
-                    ->visible(fn (Article $article) => ($article->isPublished() && auth()->user()->is_admin))
+                    ->visible(fn (Article $article) => ($article->isPublished() && auth()->user()->isAdmin()))
                     ->action(fn (Article $article, ArticleService $articleService) => $articleService->draftArticle($article)),
 
                 Tables\Actions\DeleteAction::make(),
@@ -129,7 +134,7 @@ class ArticleResource extends Resource
                         ->color('success')
                         ->requiresConfirmation()
                         ->action(fn (Collection $articles, ArticleService $articleService) => $articleService->bulkPublishArticles($articles))
-                        ->visible(auth()->user()->is_admin)
+                        ->visible(auth()->user()->isAdmin())
                         ->deselectRecordsAfterCompletion(),
 
                     Tables\Actions\BulkAction::make('Draft Articles')
@@ -137,7 +142,7 @@ class ArticleResource extends Resource
                         ->color('warning')
                         ->requiresConfirmation()
                         ->action(fn (Collection $articles, ArticleService $articleService) => $articleService->bulkDraftArticles($articles))
-                        ->visible(auth()->user()->is_admin)
+                        ->visible(auth()->user()->isAdmin())
                         ->deselectRecordsAfterCompletion()
                 ]),
             ]);

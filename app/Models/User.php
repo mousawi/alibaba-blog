@@ -45,12 +45,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 
     public function articles(): HasMany
     {
         return $this->hasMany(Article::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return isset($this->is_admin) && $this->is_admin;
     }
 
     # credit: https://chrisblackwell.me/generate-perfect-initials-using-php/
