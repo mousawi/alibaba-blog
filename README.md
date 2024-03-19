@@ -12,6 +12,7 @@ Alibaba-blog is a Laravel project for creating and managing a blog. This README 
   - [Creating User](#creating-user)
     - [1. Register on the Site](#1-register-on-the-site)
     - [2. Create from Admin Panel](#2-create-from-admin-panel)
+  - [Running Tests](#running-tests)
   - [Credit](#credit)
   - [Code Assignment](#code-assignment)
 
@@ -36,11 +37,13 @@ To get started with Alibaba-blog, follow these steps:
     docker-compose up -d --build
     ```
 5. Install Composer dependencies:
-   ```bash
-   docker-compose exec app composer install
+    ```bash
+    docker-compose exec app composer install
+    ```
 6. Generate an application key:
-   ```bash
-   docker-compose exec app php artisan key:generate
+    ```bash
+    docker-compose exec app php artisan key:generate
+    ```
 
 ## Usage
 
@@ -66,6 +69,7 @@ To create an admin user for Alibaba-blog, follow these steps:
 Follow the prompts to provide the admin's name, email, and password.
 
 ## Creating User
+
 There are two ways to create a user in Alibaba-blog:
 
 ### 1. Register on the Site
@@ -89,9 +93,17 @@ Administrators can create users from the admin panel by following these steps:
 
 Choose the method that best suits your needs for creating users in Alibaba-blog.
 
+## Running Tests
+
+To ensure Alibaba-blog's functionality, run tests using the following command:
+
+```bash
+docker-compose exec app php artisan test
+```
+
 ## Credit
 
-Alibaba-blog is built using the Laravel PHP framework and FailmentPHP. We acknowledge and thank the Laravel and FailmentPHP communities for their contributions and support.
+Alibaba-blog is built using the [Laravel](https://laravel.com/) PHP framework and [FailmentPHP](https://filamentphp.com/). We acknowledge and thank the Laravel and FailmentPHP communities for their contributions and support.
 
 ## Code Assignment
 
