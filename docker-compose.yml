@@ -1,0 +1,47 @@
+version: "3.9"
+
+networks:
+  laravel:
+    name: laravel
+
+services:
+  app:
+    container_name: alibaba-blog-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - laravel
+
+  mysql:
+    container_name: alibaba-blog-mysql
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=alibaba_blog
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=admin
+    ports:
+      - "3307:3307"
+    networks:
+      - laravel
+
+  web:
+    container_name: alibaba-blog-web
+    image: nginx:stable-alpine
+    restart: always
+    ports:
+      - "9000:80"
+    volumes:
+      - .:/var/www/html
+      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - laravel
+

@@ -18,3 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+
+# Container file
+/.docker/mysql/*
+!/.docker/mysql/.gitkeep
