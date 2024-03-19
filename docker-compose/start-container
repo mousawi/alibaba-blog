@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-sleep 30 && php /var/www/artisan migrate
-
-if [ $# -gt 0 ]; then
-    exec gosu $WWWUSER "$@"

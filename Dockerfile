@@ -12,9 +12,10 @@ RUN apt install -y \
     libonig-dev \
     libxml2-dev
 
-RUN apt install -y \
-    nodejs \
-    npm
+COPY --from=node:20-slim /usr/local/bin /usr/local/bin
+# Get npm
+COPY --from=node:20-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
+
 
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
@@ -29,6 +30,11 @@ RUN mkdir -p /home/$user/.composer && \
 
 WORKDIR /var/www
 
-RUN npm install && npm run build
+COPY . /var/www
+
+COPY ./docker-compose/build-assets /usr/local/bin/build-assets
+RUN chmod +x /usr/local/bin/build-assets
+
+RUN build-assets
 
 USER $user
