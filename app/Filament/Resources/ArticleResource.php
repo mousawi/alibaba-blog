@@ -95,7 +95,8 @@ class ArticleResource extends Resource
                     ->color(fn (ArticleStatus $state): string => $state->color())
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\TrashedFilter::make()
+                    ->visible(auth()->user()->is_admin),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
