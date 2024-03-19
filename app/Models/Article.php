@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Article extends Model
 {
@@ -47,5 +48,10 @@ class Article extends Model
     public function isPublished(): bool
     {
         return $this->publication_status === ArticleStatus::Published;
+    }
+
+    public function scopePublished(Builder $query): void
+    {
+        $query->where('publication_status', ArticleStatus::Published);
     }
 }

@@ -56,12 +56,12 @@
                         @foreach ($articles as $article)
                         <article class="flex max-w-xl flex-col items-start justify-between">
                             <div class="flex items-center gap-x-4 text-xs">
-                                <time datetime="2020-03-16" class="text-gray-500">{{ $article->publication_date->toFormattedDateString() }}</time>
+                                <time class="text-gray-500">{{ $article->publication_date->toFormattedDateString() }}</time>
                             </div>
                             <div class="group relative">
                                 <h3
                                     class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                                    <a href="#">
+                                    <a href="{{ route('articles.show', $article->slug) }}">
                                         <span class="absolute inset-0"></span>
                                         {{ $article->title }}
                                     </a>

@@ -53,7 +53,6 @@ class ArticleResource extends Resource
 
                 Forms\Components\RichEditor::make('content')
                     ->string()
-                    ->maxLength(255)
                     ->required(),
 
                 Forms\Components\DateTimePicker::make('publication_date')

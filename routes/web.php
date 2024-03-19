@@ -6,5 +6,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('articles.')->group(function () {
     Route::get('/', [ArticleController::class, 'index'])->name('index');
-    Route::get('{article:slug}', [ArticleController::class, 'show'])->name('show');
+    Route::get('{slug}', [ArticleController::class, 'show'])->name('show');
 });

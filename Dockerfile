@@ -33,9 +33,7 @@ WORKDIR /var/www
 
 COPY . /var/www
 
-COPY ./docker-compose/build-assets /usr/local/bin/build-assets
-RUN chmod +x /usr/local/bin/build-assets
-
-RUN npm install && npm run build && composer install
+COPY ./docker-compose/install-app /usr/local/bin/install-app
+RUN chmod +x /usr/local/bin/install-app
 
 USER $user

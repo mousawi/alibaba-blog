@@ -11,13 +11,17 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::with('author')->paginate(6);
+        $articles = Article::with('author')->published()->paginate(6);
 
         return view('articles.index', ['articles' => $articles]);
     }
 
-    public function show(Article $article): View
+    public function show($slug): View
     {
+        $article = Article::whereSlug($slug)->first();
+
+        abort_if(is_null($article), 404);
+
         return view('articles.show', ['article' => $article]);
     }
 

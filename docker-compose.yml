@@ -12,7 +12,21 @@ services:
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
-      - ./:/var/www
+      - .:/var/www
+    networks:
+      - alibaba-blog-network
+    depends_on:
+      - db
+      - nginx
+  nginx:
+    image: nginx:alpine
+    container_name: alibaba-blog-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - .:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - alibaba-blog-network
 
@@ -30,21 +44,10 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - alibaba-blog:/var/lib/mysql
+      - alibaba-blog-db:/var/lib/mysql
     networks:
       - alibaba-blog-network
 
-  nginx:
-    image: nginx:alpine
-    container_name: alibaba-blog-nginx
-    restart: unless-stopped
-    ports:
-      - 8000:80
-    volumes:
-      - ./:/var/www
-      - ./docker-compose/nginx:/etc/nginx/conf.d/
-    networks:
-      - alibaba-blog-network
 
 networks:
   alibaba-blog-network:
