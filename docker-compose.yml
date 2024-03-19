@@ -3,7 +3,7 @@ services:
   app:
     build:
       args:
-        user: www
+        user: alibaba
         uid: 1000
       context: ./
       dockerfile: Dockerfile
@@ -15,7 +15,6 @@ services:
       - ./:/var/www
     networks:
       - alibaba-blog-network
-    entrypoint: sh -c "sleep 30 && php /var/www/artisan migrate"
   db:
     image: mysql:8.0
     container_name: alibaba-blog-mysql
