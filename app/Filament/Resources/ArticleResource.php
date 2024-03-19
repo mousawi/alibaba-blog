@@ -4,9 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Enums\ArticleStatus;
 use App\Filament\Resources\ArticleResource\Pages;
-use App\Filament\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
-use App\Models\User;
+use App\Services\ArticleService;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -17,6 +16,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleResource extends Resource
 {
@@ -86,24 +87,33 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('slug'),
 
                 Tables\Columns\TextColumn::make('publication_date')
-                    ->formatStateUsing(
-                        fn (Carbon $state): string =>
-                        $state->toFormattedDateString() . ' (' . $state->diffForHumans() . ')'
-                    ),
+                    ->formatStateUsing(fn (Carbon $state): string => $state->toFormattedDateString() . ' (' . $state->diffForHumans() . ')'),
 
                 Tables\Columns\TextColumn::make('publication_status')
                     ->badge()
                     ->formatStateUsing(fn (ArticleStatus $state): string => $state->string())
-                    ->color(
-                        fn (ArticleStatus $state): string =>
-                        $state->color()
-                    )
+                    ->color(fn (ArticleStatus $state): string => $state->color())
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
+                Tables\Actions\Action::make('Publish Article')
+                    ->requiresConfirmation()
+                    ->icon('heroicon-o-rocket-launch')
+                    ->color('success')
+                    ->visible(fn (Article $article) => ($article->isDraft() && auth()->user()->is_admin))
+                    ->action(fn (Article $article, ArticleService $articleService) => $articleService->publishArticle($article)),
+
+                Tables\Actions\Action::make('Draft Article')
+                    ->requiresConfirmation()
+                    ->icon('heroicon-o-rocket-launch')
+                    ->color('warning')
+                    ->visible(fn (Article $article) => ($article->isPublished() && auth()->user()->is_admin))
+                    ->action(fn (Article $article, ArticleService $articleService) => $articleService->draftArticle($article)),
+
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
             ])
@@ -112,6 +122,22 @@ class ArticleResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
+
+                    Tables\Actions\BulkAction::make('Publish Articles')
+                        ->icon('heroicon-o-check-badge')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->action(fn (Collection $articles, ArticleService $articleService) => $articleService->bulkPublishArticles($articles))
+                        ->visible(auth()->user()->is_admin)
+                        ->deselectRecordsAfterCompletion(),
+
+                    Tables\Actions\BulkAction::make('Draft Articles')
+                        ->icon('heroicon-o-check-badge')
+                        ->color('warning')
+                        ->requiresConfirmation()
+                        ->action(fn (Collection $articles, ArticleService $articleService) => $articleService->bulkDraftArticles($articles))
+                        ->visible(auth()->user()->is_admin)
+                        ->deselectRecordsAfterCompletion()
                 ]),
             ]);
     }

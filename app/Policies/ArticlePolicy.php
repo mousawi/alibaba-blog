@@ -41,6 +41,14 @@ class ArticlePolicy
     }
 
     /**
+     * Determine whether the user can update the model.
+     */
+    public function updateAny(User $user): bool
+    {
+        return $user->is_admin;
+    }
+
+    /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Article $article): bool

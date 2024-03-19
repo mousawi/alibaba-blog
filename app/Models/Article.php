@@ -38,4 +38,14 @@ class Article extends Model
     {
         return $this->belongsTo(User::class,'user_id', 'id');
     }
+
+    public function isDraft(): bool
+    {
+        return $this->publication_status === ArticleStatus::Draft;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->publication_status === ArticleStatus::Published;
+    }
 }
