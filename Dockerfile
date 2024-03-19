@@ -10,16 +10,17 @@ RUN apt install -y \
     curl \
     libpng-dev \
     libonig-dev \
-    libxml2-dev
+    libxml2-dev \
+    zlib1g-dev \
+    libzip-dev \
+    zip
 
 COPY --from=node:20-slim /usr/local/bin /usr/local/bin
-# Get npm
 COPY --from=node:20-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
-
 
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install intl zip pdo_mysql mbstring exif pcntl bcmath gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -35,6 +36,6 @@ COPY . /var/www
 COPY ./docker-compose/build-assets /usr/local/bin/build-assets
 RUN chmod +x /usr/local/bin/build-assets
 
-RUN build-assets
+RUN npm install && npm run build && composer install
 
 USER $user

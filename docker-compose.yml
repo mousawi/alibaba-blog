@@ -15,10 +15,13 @@ services:
       - ./:/var/www
     networks:
       - alibaba-blog-network
+
   db:
     image: mysql:8.0
     container_name: alibaba-blog-mysql
     restart: unless-stopped
+    ports:
+      - 3306:3306
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -27,9 +30,10 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+      - alibaba-blog:/var/lib/mysql
     networks:
       - alibaba-blog-network
+
   nginx:
     image: nginx:alpine
     container_name: alibaba-blog-nginx
@@ -41,6 +45,10 @@ services:
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - alibaba-blog-network
+
 networks:
   alibaba-blog-network:
     driver: bridge
+
+volumes:
+  alibaba-blog-db:

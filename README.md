@@ -22,7 +22,7 @@ To get started with Alibaba-blog, follow these steps:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your_username/alibaba-blog.git
+    git clone https://github.com/mousawi/alibaba-blog.git
 
     ```
 
