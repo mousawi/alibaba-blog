@@ -34,11 +34,11 @@ To get started with Alibaba-blog, follow these steps:
 3. Configure the .env file with your environment variables. You may need to adjust the database settings and any other configuration specific to your environment.
 4. Build and start the Docker containers:
     ```bash
-    docker-compose up -d --build
+    docker compose up -d --build
     ```
 5. Install App:
     ```bash
-    docker-compose exec app install-app
+    docker compose exec app install-app
     ```
 
 ## Usage
@@ -52,7 +52,7 @@ To create an admin user for Alibaba-blog, follow these steps:
 1. Run the command to create the admin user:
 
     ```bash
-    docker-compose exec app php artisan alibaba-blog:create-admin
+    docker compose exec app php artisan alibaba-blog:create-admin
     ```
 
 Follow the prompts to provide the admin's name, email, and password.
@@ -85,7 +85,7 @@ Administrators can create users from the admin panel by following these steps:
 To ensure Alibaba-blog's functionality, run tests using the following command:
 
 ```bash
-docker-compose exec app php artisan test
+docker compose exec app php artisan test
 ```
 
 ## Credit
