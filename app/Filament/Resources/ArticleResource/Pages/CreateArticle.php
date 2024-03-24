@@ -10,10 +10,10 @@ class CreateArticle extends CreateRecord
 {
     protected static string $resource = ArticleResource::class;
 
-    protected function mutateFormDataBeforeFill(array $data): array
+    protected function mutateFormDataBeforeCreate(array $data): array
     {
         if (!auth()->user()->isAdmin()) {
-            unset($data['user_id']);
+            $data['user_id'] = auth()->user()->id;
             unset($data['publication_status']);
         }
 
